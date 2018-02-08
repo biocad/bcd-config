@@ -1,0 +1,38 @@
+name:           bcd-config
+version:        0.1.0.0
+description:    Library to get config to different systems
+homepage:       https://github.com/biocad/bcd-config#readme
+bug-reports:    https://github.com/biocad/bcd-config/issues
+author:         Bogdan Neterebskii
+maintainer:     bog2dan1@gmail.com
+copyright:      (c) 2018, Bogdan Neterebskii
+stability:      experimental
+category:       System
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    CHANGELOG.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/biocad/bcd-config
+
+library
+  hs-source-dirs:   src
+  exposed-modules:  System.BCD.Config
+                  , System.BCD.Config.Mongo
+                  , System.BCD.Config.Neo4j
+                  , System.BCD.Config.Redis
+                  , System.BCD.Config.Mysql
+                  , System.BCD.Config.Postgres
+                  , System.BCD.Config.Schrodinger
+                  , System.BCD.Config.FileSystem
+  build-depends:    base >=4.7 && <5
+                  , text
+                  , unordered-containers
+                  , aeson-picker
+  default-language: Haskell2010
