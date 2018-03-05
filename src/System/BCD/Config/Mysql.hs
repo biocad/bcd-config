@@ -2,11 +2,11 @@
 
 module System.BCD.Config.Mysql
   ( MysqlConfig (..)
-  , GetConfig (..)
+  , FromJsonConfig (..)
   ) where
 
 import           Data.Aeson.Picker   ((|--))
-import           System.BCD.Config   (GetConfig (..), getConfigText)
+import           System.BCD.Config   (FromJsonConfig (..), getConfigText)
 
 data MysqlConfig = MysqlConfig { _host     :: String
                                , _port     :: Int
@@ -16,8 +16,8 @@ data MysqlConfig = MysqlConfig { _host     :: String
                                }
   deriving (Show, Read, Eq)
 
-instance GetConfig MysqlConfig where
-  getConfig = do
+instance FromJsonConfig MysqlConfig where
+  fromJsonConfig = do
       jsonText <- getConfigText
       let get field = jsonText |-- ["deploy", "mysql", field]
       pure $ MysqlConfig (get "host")

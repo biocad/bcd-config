@@ -1,18 +1,21 @@
 module System.BCD.Config
-  ( GetConfig (..)
+  ( FromJsonConfig (..)
   , getConfigText
   ) where
 
-import           Control.Applicative ((<|>))
-import           Data.List           (find, isPrefixOf)
-import           Data.Maybe          (fromJust)
-import           Data.Text           (Text)
-import           Data.Text.IO        (readFile)
-import           Prelude             hiding (readFile)
-import           System.Environment  (getArgs)
+import           Control.Applicative    ((<|>))
+import           Control.Monad.IO.Class (MonadIO, liftIO)
+import           Data.List              (find, isPrefixOf)
+import           Data.Maybe             (fromJust)
+import           Data.Text              (Text)
+import           Data.Text.IO           (readFile)
+import           Prelude                hiding (readFile)
+import           System.Environment     (getArgs)
 
-class GetConfig a where
-  getConfig :: IO a
+
+-- class 'FromJsonConfig' describes opportunity to read something from configutaion
+class FromJsonConfig a where
+  fromJsonConfig :: MonadIO m => m a
 
 {-|
   The 'getConfig' function returns 'Text' in 'IO' monad with content of JSON file with config.
@@ -26,11 +29,11 @@ class GetConfig a where
   @
   By default it is looking for @config.json@ in current directory.
 -}
-getConfigText :: IO Text
+getConfigText :: MonadIO m => m Text
 getConfigText = do
-    args <- getArgs
+    args <- liftIO getArgs
     let path = fromJust $ findLong args <|> findShort args <|> Just "config.json"
-    readFile path
+    liftIO $ readFile path
   where
     longArg = "--config-file="
 

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.0.1] - 2018-03-05
+### Changed
+- Class name for get config from JSON. Now it is `FromJsonConfig` with method `fromJsonConfig :: MonadIO m => m a`.
+
 ## [0.1.0.0] - 2018-01-22
 ### Added
 - `GetConfig` class with method `getConfig`

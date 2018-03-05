@@ -2,18 +2,18 @@
 
 module System.BCD.Config.FileSystem
   ( FileSystemConfig (..)
-  , GetConfig (..)
+  , FromJsonConfig (..)
   ) where
 
 import           Data.Aeson.Picker   ((|--))
 import           Data.HashMap.Strict (HashMap)
-import           System.BCD.Config   (GetConfig (..), getConfigText)
+import           System.BCD.Config   (FromJsonConfig (..), getConfigText)
 
 newtype FileSystemConfig = FileSystemConfig (HashMap String FilePath)
   deriving (Show, Read, Eq)
 
-instance GetConfig FileSystemConfig where
-  getConfig = do
+instance FromJsonConfig FileSystemConfig where
+  fromJsonConfig = do
       jsonText <- getConfigText    
       let fs = jsonText |-- ["deploy", "fs"]
       pure $ FileSystemConfig fs

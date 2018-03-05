@@ -2,11 +2,11 @@
 
 module System.BCD.Config.Redis
   ( RedisConfig (..)
-  , GetConfig (..)
+  , FromJsonConfig (..)
   ) where
 
 import           Data.Aeson.Picker ((|--))
-import           System.BCD.Config (GetConfig (..), getConfigText)
+import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
 data RedisConfig = RedisConfig { _host     :: String
                                , _port     :: Int
@@ -17,8 +17,8 @@ data RedisConfig = RedisConfig { _host     :: String
   deriving (Show, Read, Eq)
 
 
-instance GetConfig RedisConfig where
-  getConfig = do
+instance FromJsonConfig RedisConfig where
+  fromJsonConfig = do
       jsonText <- getConfigText
       let get field = jsonText |-- ["deploy", "redis", field]
       pure $ RedisConfig (get "host")

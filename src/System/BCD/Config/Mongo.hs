@@ -2,11 +2,11 @@
 
 module System.BCD.Config.Mongo
   ( MongoConfig (..)
-  , GetConfig (..)
+  , FromJsonConfig (..)
   ) where
 
 import           Data.Aeson.Picker   ((|--))
-import           System.BCD.Config   (GetConfig (..), getConfigText)
+import           System.BCD.Config   (FromJsonConfig (..), getConfigText)
 
 data MongoConfig = MongoConfig { _host     :: String
                                , _port     :: Int
@@ -16,8 +16,8 @@ data MongoConfig = MongoConfig { _host     :: String
                                }
   deriving (Show, Read, Eq)
 
-instance GetConfig MongoConfig where
-  getConfig = do
+instance FromJsonConfig MongoConfig where
+  fromJsonConfig = do
       jsonText <- getConfigText
       let get field = jsonText |-- ["deploy", "mongo", field]
       pure $ MongoConfig (get "host")
