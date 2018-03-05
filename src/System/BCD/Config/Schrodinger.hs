@@ -2,11 +2,11 @@
 
 module System.BCD.Config.Schrodinger
   ( SchrodingerConfig (..)
-  , GetConfig (..)
+  , FromJsonConfig (..)
   ) where
 
 import           Data.Aeson.Picker ((|--))
-import           System.BCD.Config (GetConfig (..), getConfigText)
+import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
 data SchrodingerConfig = SchrodingerConfig { _host     :: String
                                            , _port     :: Int
@@ -15,8 +15,8 @@ data SchrodingerConfig = SchrodingerConfig { _host     :: String
                                            }
   deriving (Show, Read, Eq)
 
-instance GetConfig SchrodingerConfig where
-  getConfig = do
+instance FromJsonConfig SchrodingerConfig where
+  fromJsonConfig = do
       jsonText <- getConfigText
       let get field = jsonText |-- ["deploy", "schrodinger", field]
       pure $ SchrodingerConfig (get "host")

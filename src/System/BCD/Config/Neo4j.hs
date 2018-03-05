@@ -2,11 +2,11 @@
 
 module System.BCD.Config.Neo4j
   ( Neo4jConfig (..)
-  , GetConfig (..)
+  , FromJsonConfig (..)
   ) where
 
 import           Data.Aeson.Picker ((|--))
-import           System.BCD.Config (GetConfig (..), getConfigText)
+import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
 data Neo4jConfig = Neo4jConfig { _host     :: String
                                , _port     :: Int
@@ -19,8 +19,8 @@ data Neo4jConfig = Neo4jConfig { _host     :: String
                                }
   deriving (Show, Read, Eq)
 
-instance GetConfig Neo4jConfig where
-  getConfig = do
+instance FromJsonConfig Neo4jConfig where
+  fromJsonConfig = do
       jsonText <- getConfigText
       let get field = jsonText |-- ["deploy", "neo4j", field]
       pure $ Neo4jConfig (get "host")

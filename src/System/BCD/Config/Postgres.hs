@@ -2,11 +2,11 @@
 
 module System.BCD.Config.Postgres
   ( PostgresConfig (..)
-  , GetConfig (..)
+  , FromJsonConfig (..)
   ) where
 
 import           Data.Aeson.Picker   ((|--))
-import           System.BCD.Config   (GetConfig (..), getConfigText)
+import           System.BCD.Config   (FromJsonConfig (..), getConfigText)
 
 data PostgresConfig = PostgresConfig { _host     :: String
                                      , _port     :: Int
@@ -16,8 +16,8 @@ data PostgresConfig = PostgresConfig { _host     :: String
                                      }
   deriving (Show, Read, Eq)
 
-instance GetConfig PostgresConfig where
-  getConfig = do
+instance FromJsonConfig PostgresConfig where
+  fromJsonConfig = do
       jsonText <- getConfigText
       let get field = jsonText |-- ["deploy", "postgres", field]
       pure $ PostgresConfig (get "host")
