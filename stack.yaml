@@ -15,8 +15,7 @@ packages:
 - '.'
 
 # necessary extra-deps that are not included in the BCD-LTS
-extra-deps:
-- aeson-picker-0.1.0.2
+extra-deps: []
 
 # https://github.com/commercialhaskell/stack/issues/3520
 ignore-revision-mismatch: true
