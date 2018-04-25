@@ -1,5 +1,5 @@
 name:           bcd-config
-version:        0.1.0.3
+version:        0.1.0.4
 description:    Library to get config to different systems
 homepage:       https://github.com/biocad/bcd-config#readme
 bug-reports:    https://github.com/biocad/bcd-config/issues
@@ -33,6 +33,7 @@ library
                   , System.BCD.Config.FileSystem
                   , System.BCD.Config.BioSources
   build-depends:    base >=4.7 && <5
+                  , containers
                   , text
                   , unordered-containers
                   , aeson-picker

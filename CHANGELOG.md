@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.0.4] - 2018-04-25
+### Changed
+- Field `database` changed to `databases` in Mongo config.
+
 ## [0.1.0.3] - 2018-04-25
 ### Added
 - Field `database` in Mongo config.
