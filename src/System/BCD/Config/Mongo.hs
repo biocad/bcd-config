@@ -6,16 +6,21 @@ module System.BCD.Config.Mongo
   ) where
 
 import           Data.Aeson.Picker ((|--))
+import           Data.Map.Strict   (Map)
+import           Data.Text         (Text)
 import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
-data MongoConfig = MongoConfig { _host     :: String
-                               , _port     :: Int
-                               , _user     :: String
-                               , _password :: String
-                               , _database :: String
-                               , _descr    :: String
+
+data MongoConfig = MongoConfig { _host      :: String
+                               , _port      :: Int
+                               , _user      :: String
+                               , _password  :: String
+                               , _databases :: Map String Text
+                               , _descr     :: String
                                }
   deriving (Show, Read, Eq)
+
+
 
 instance FromJsonConfig MongoConfig where
   fromJsonConfig = do
@@ -25,5 +30,5 @@ instance FromJsonConfig MongoConfig where
                          (get "port")
                          (get "user")
                          (get "password")
-                         (get "database")
+                         (get "databases")
                          (get "descr")
