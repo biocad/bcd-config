@@ -6,6 +6,8 @@ module System.BCD.Config.Postgres
   ) where
 
 import           Data.Aeson.Picker   ((|--))
+import           Data.Map.Strict     (Map)
+import           Data.Text           (Text)
 import           System.BCD.Config   (FromJsonConfig (..), getConfigText)
 
 data PostgresConfig = PostgresConfig { _host      :: String
