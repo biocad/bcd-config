@@ -8,11 +8,12 @@ module System.BCD.Config.Postgres
 import           Data.Aeson.Picker   ((|--))
 import           System.BCD.Config   (FromJsonConfig (..), getConfigText)
 
-data PostgresConfig = PostgresConfig { _host     :: String
-                                     , _port     :: Int
-                                     , _user     :: String
-                                     , _password :: String
-                                     , _descr    :: String
+data PostgresConfig = PostgresConfig { _host      :: String
+                                     , _port      :: Int
+                                     , _user      :: String
+                                     , _password  :: String
+                                     , _databases :: Map String Text
+                                     , _descr     :: String
                                      }
   deriving (Show, Read, Eq)
 
@@ -24,4 +25,5 @@ instance FromJsonConfig PostgresConfig where
                             (get "port")
                             (get "user")
                             (get "password")
+                            (get "databases")
                             (get "descr")
