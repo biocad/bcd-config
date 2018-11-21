@@ -1,12 +1,21 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module System.BCD.Config.Mysql
-  ( MysqlConfig (..)
+  (
+    MysqlConfig (..)
   , FromJsonConfig (..)
+  , host
+  , port
+  , user
+  , password
+  , descr
   ) where
 
-import           Data.Aeson.Picker   ((|--))
-import           System.BCD.Config   (FromJsonConfig (..), getConfigText)
+import           Control.Lens      (makeLenses)
+import           Data.Aeson        (FromJSON (..), ToJSON (..),
+                                    genericParseJSON, genericToJSON)
+import           Data.Aeson.Casing (aesonDrop, snakeCase)
+import           Data.Aeson.Picker ((|--))
+import           GHC.Generics      (Generic)
+import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
 data MysqlConfig = MysqlConfig { _host     :: String
                                , _port     :: Int
@@ -14,14 +23,16 @@ data MysqlConfig = MysqlConfig { _host     :: String
                                , _password :: String
                                , _descr    :: String
                                }
-  deriving (Show, Read, Eq)
+  deriving (Show, Read, Eq, Generic)
+
+makeLenses ''MysqlConfig
+
+instance ToJSON MysqlConfig where
+  toJSON = genericToJSON $ aesonDrop 1 snakeCase
+instance FromJSON MysqlConfig where
+  parseJSON = genericParseJSON $ aesonDrop 1 snakeCase
 
 instance FromJsonConfig MysqlConfig where
   fromJsonConfig = do
-      jsonText <- getConfigText
-      let get field = jsonText |-- ["deploy", "mysql", field]
-      pure $ MysqlConfig (get "host")
-                         (get "port")
-                         (get "user")
-                         (get "password")
-                         (get "descr")
+      config <- getConfigText
+      pure $ config |-- ["deploy", "mysql"]

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.1.0] - 2018-11-21
+### Added
+- Lens for configs;
+- Instances are implemented using `Data.Aeson`. 
+
 ## [0.1.0.6] - 2018-09-20
 ### Fixed
 - Bugfix with imports

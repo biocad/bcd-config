@@ -1,5 +1,6 @@
 module System.BCD.Config
-  ( FromJsonConfig (..)
+  (
+    FromJsonConfig (..)
   , getConfigText
   ) where
 
