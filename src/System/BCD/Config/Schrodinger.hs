@@ -1,11 +1,19 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module System.BCD.Config.Schrodinger
-  ( SchrodingerConfig (..)
+  (
+    SchrodingerConfig (..)
   , FromJsonConfig (..)
+  , host
+  , port
+  , user
+  , password
   ) where
 
+import           Control.Lens      (makeLenses)
+import           Data.Aeson        (FromJSON (..), ToJSON (..),
+                                    genericParseJSON, genericToJSON)
+import           Data.Aeson.Casing (aesonDrop, snakeCase)
 import           Data.Aeson.Picker ((|--))
+import           GHC.Generics      (Generic)
 import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
 data SchrodingerConfig = SchrodingerConfig { _host     :: String
@@ -13,13 +21,16 @@ data SchrodingerConfig = SchrodingerConfig { _host     :: String
                                            , _user     :: String
                                            , _password :: String
                                            }
-  deriving (Show, Read, Eq)
+  deriving (Show, Read, Eq, Generic)
+
+makeLenses ''SchrodingerConfig
+
+instance ToJSON SchrodingerConfig where
+  toJSON = genericToJSON $ aesonDrop 1 snakeCase
+instance FromJSON SchrodingerConfig where
+  parseJSON = genericParseJSON $ aesonDrop 1 snakeCase
 
 instance FromJsonConfig SchrodingerConfig where
   fromJsonConfig = do
-      jsonText <- getConfigText
-      let get field = jsonText |-- ["deploy", "schrodinger", field]
-      pure $ SchrodingerConfig (get "host")
-                               (get "port")
-                               (get "user")
-                               (get "password")
+      config <- getConfigText
+      pure $ config |-- ["deploy", "schrodinger"]

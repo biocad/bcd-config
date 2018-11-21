@@ -1,7 +1,6 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module System.BCD.Config.FileSystem
-  ( FileSystemConfig (..)
+  (
+    FileSystemConfig (..)
   , FromJsonConfig (..)
   ) where
 
@@ -14,6 +13,6 @@ newtype FileSystemConfig = FileSystemConfig (HashMap String FilePath)
 
 instance FromJsonConfig FileSystemConfig where
   fromJsonConfig = do
-      jsonText <- getConfigText    
+      jsonText <- getConfigText
       let fs = jsonText |-- ["deploy", "fs"]
       pure $ FileSystemConfig fs

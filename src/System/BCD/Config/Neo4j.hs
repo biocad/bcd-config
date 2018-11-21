@@ -1,11 +1,23 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module System.BCD.Config.Neo4j
-  ( Neo4jConfig (..)
+  (
+    Neo4jConfig (..)
   , FromJsonConfig (..)
+  , host
+  , port
+  , user
+  , password
+  , stripes
+  , timeout
+  , rps
+  , descr
   ) where
 
+import           Control.Lens      (makeLenses)
+import           Data.Aeson        (FromJSON (..), ToJSON (..),
+                                    genericParseJSON, genericToJSON)
+import           Data.Aeson.Casing (aesonDrop, snakeCase)
 import           Data.Aeson.Picker ((|--))
+import           GHC.Generics      (Generic)
 import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
 data Neo4jConfig = Neo4jConfig { _host     :: String
@@ -17,17 +29,16 @@ data Neo4jConfig = Neo4jConfig { _host     :: String
                                , _rps      :: Int
                                , _descr    :: String
                                }
-  deriving (Show, Read, Eq)
+  deriving (Show, Read, Eq, Generic)
+
+makeLenses ''Neo4jConfig
+
+instance ToJSON Neo4jConfig where
+  toJSON = genericToJSON $ aesonDrop 1 snakeCase
+instance FromJSON Neo4jConfig where
+  parseJSON = genericParseJSON $ aesonDrop 1 snakeCase
 
 instance FromJsonConfig Neo4jConfig where
   fromJsonConfig = do
-      jsonText <- getConfigText
-      let get field = jsonText |-- ["deploy", "neo4j", field]
-      pure $ Neo4jConfig (get "host")
-                         (get "port")
-                         (get "user")
-                         (get "password")
-                         (get "stripes")
-                         (get "timeout")
-                         (get "rps")
-                         (get "descr")
+      config <- getConfigText
+      pure $ config |-- ["deploy", "neo4j"]
