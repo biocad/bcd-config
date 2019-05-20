@@ -8,6 +8,7 @@ module System.BCD.Config.Schrodinger
   , password
   ) where
 
+import           Control.DeepSeq   (NFData)
 import           Control.Lens      (makeLenses)
 import           Data.Aeson        (FromJSON (..), ToJSON (..),
                                     genericParseJSON, genericToJSON)
@@ -24,6 +25,8 @@ data SchrodingerConfig = SchrodingerConfig { _host     :: String
   deriving (Show, Read, Eq, Generic)
 
 makeLenses ''SchrodingerConfig
+
+instance NFData SchrodingerConfig
 
 instance ToJSON SchrodingerConfig where
   toJSON = genericToJSON $ aesonDrop 1 snakeCase

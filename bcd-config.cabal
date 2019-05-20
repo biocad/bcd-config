@@ -1,5 +1,5 @@
 name:           bcd-config
-version:        0.1.1.0
+version:        0.1.1.1
 synopsis:       Library to get config.
 description:    Library to get config to different systems
 homepage:       https://github.com/biocad/bcd-config#readme
@@ -34,13 +34,14 @@ library
                   , System.BCD.Config.FileSystem
                   , System.BCD.Config.BioSources
   build-depends:    base >=4.7 && <5
-                  , containers
-                  , text
-                  , unordered-containers
                   , aeson
                   , aeson-casing
                   , aeson-picker
+                  , containers
+                  , deepseq
                   , lens
+                  , text
+                  , unordered-containers
   default-language: Haskell2010
   default-extensions:   DeriveGeneric
                       , OverloadedStrings

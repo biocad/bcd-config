@@ -9,6 +9,7 @@ module System.BCD.Config.Mysql
   , descr
   ) where
 
+import           Control.DeepSeq   (NFData)
 import           Control.Lens      (makeLenses)
 import           Data.Aeson        (FromJSON (..), ToJSON (..),
                                     genericParseJSON, genericToJSON)
@@ -26,6 +27,8 @@ data MysqlConfig = MysqlConfig { _host     :: String
   deriving (Show, Read, Eq, Generic)
 
 makeLenses ''MysqlConfig
+
+instance NFData MysqlConfig
 
 instance ToJSON MysqlConfig where
   toJSON = genericToJSON $ aesonDrop 1 snakeCase

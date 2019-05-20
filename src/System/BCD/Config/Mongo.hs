@@ -10,6 +10,7 @@ module System.BCD.Config.Mongo
   , descr
   ) where
 
+import           Control.DeepSeq   (NFData)
 import           Control.Lens      (makeLenses)
 import           Data.Aeson        (FromJSON (..), ToJSON (..),
                                     genericParseJSON, genericToJSON)
@@ -19,7 +20,6 @@ import           Data.Map.Strict   (Map)
 import           Data.Text         (Text)
 import           GHC.Generics      (Generic)
 import           System.BCD.Config (FromJsonConfig (..), getConfigText)
-
 
 data MongoConfig = MongoConfig { _host      :: String
                                , _port      :: Int
@@ -31,6 +31,8 @@ data MongoConfig = MongoConfig { _host      :: String
   deriving (Show, Read, Eq, Generic)
 
 makeLenses ''MongoConfig
+
+instance NFData MongoConfig
 
 instance ToJSON MongoConfig where
   toJSON = genericToJSON $ aesonDrop 1 snakeCase

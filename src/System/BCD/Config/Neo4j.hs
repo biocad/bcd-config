@@ -12,6 +12,7 @@ module System.BCD.Config.Neo4j
   , descr
   ) where
 
+import           Control.DeepSeq   (NFData)
 import           Control.Lens      (makeLenses)
 import           Data.Aeson        (FromJSON (..), ToJSON (..),
                                     genericParseJSON, genericToJSON)
@@ -32,6 +33,8 @@ data Neo4jConfig = Neo4jConfig { _host     :: String
   deriving (Show, Read, Eq, Generic)
 
 makeLenses ''Neo4jConfig
+
+instance NFData Neo4jConfig
 
 instance ToJSON Neo4jConfig where
   toJSON = genericToJSON $ aesonDrop 1 snakeCase
