@@ -4,14 +4,18 @@ module System.BCD.Config.BioSources
   , FromJsonConfig (..)
   ) where
 
+import           Control.DeepSeq   (NFData)
 import           Data.Aeson.Picker ((|--))
+import           GHC.Generics      (Generic)
 import           System.BCD.Config (FromJsonConfig (..), getConfigText)
 
 -- | This class contains information where to find files that are related to
 -- semantic common used library [bio-sources](https://github.com/biocad/bio-sources).
 -- That library includes dihedral angles, kmers, ideal aminoacids and functions to work with them.
 newtype BioSourcesConfig = BioSourcesConfig { bioSourcesPath :: FilePath }
-  deriving (Show, Read, Eq)
+  deriving (Show, Read, Eq, Generic)
+
+instance NFData BioSourcesConfig
 
 instance FromJsonConfig BioSourcesConfig where
   fromJsonConfig = do

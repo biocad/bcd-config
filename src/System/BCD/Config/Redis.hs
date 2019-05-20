@@ -9,6 +9,7 @@ module System.BCD.Config.Redis
   , descr
   ) where
 
+import           Control.DeepSeq   (NFData)
 import           Control.Lens      (makeLenses)
 import           Data.Aeson        (FromJSON (..), ToJSON (..),
                                     genericParseJSON, genericToJSON)
@@ -26,6 +27,8 @@ data RedisConfig = RedisConfig { _host     :: String
   deriving (Show, Read, Eq, Generic)
 
 makeLenses ''RedisConfig
+
+instance NFData RedisConfig
 
 instance ToJSON RedisConfig where
   toJSON = genericToJSON $ aesonDrop 1 snakeCase

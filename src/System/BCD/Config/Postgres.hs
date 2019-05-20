@@ -10,6 +10,7 @@ module System.BCD.Config.Postgres
   , descr
   ) where
 
+import           Control.DeepSeq   (NFData)
 import           Control.Lens      (makeLenses)
 import           Data.Aeson        (FromJSON (..), ToJSON (..),
                                     genericParseJSON, genericToJSON)
@@ -30,6 +31,8 @@ data PostgresConfig = PostgresConfig { _host      :: String
   deriving (Show, Read, Eq, Generic)
 
 makeLenses ''PostgresConfig
+
+instance NFData PostgresConfig
 
 instance ToJSON PostgresConfig where
   toJSON = genericToJSON $ aesonDrop 1 snakeCase
