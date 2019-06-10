@@ -21,7 +21,7 @@ class FromJsonConfig a where
 {-|
   The 'getConfig' function returns 'Text' in 'IO' monad with content of JSON file with config.
   More information on JSON config file convention is availeble here:
-  <https://api.biocad.ru/Infrastructure/%D0%9A%D0%BE%D0%BD%D0%B2%D0%B5%D0%BD%D1%86%D0%B8%D0%B8/config.json>
+  <https://api.biocad.ru/Infrastructure/config.json>
 
   This function will looks for config file with such params:
   @
