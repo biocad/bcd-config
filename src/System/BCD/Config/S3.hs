@@ -1,13 +1,18 @@
-module System.BCD.Config.Schrodinger
+module System.BCD.Config.S3
   (
-    SchrodingerConfig (..)
+    S3Config (..)
   , FromJsonConfig (..)
   , FromDotenv (..)
   , loadDotenv
+  , Host
+  , Port
+  , Secret
+  , Bucket
   , host
   , port
-  , user
-  , password
+  , bucket
+  , s3key
+  , s3secret
   ) where
 
 import           Control.DeepSeq   (NFData)
@@ -17,36 +22,48 @@ import           Data.Aeson        (FromJSON (..), ToJSON (..),
                                     genericParseJSON, genericToJSON)
 import           Data.Aeson.Casing (aesonDrop, snakeCase)
 import           Data.Aeson.Picker ((|--))
+import           Data.Text         (Text)
 import           GHC.Generics      (Generic)
 import           System.BCD.Config (FromDotenv (..), FromJsonConfig (..),
                                     GetEnv (..), getConfigText, loadDotenv)
 
-data SchrodingerConfig = SchrodingerConfig { _host     :: String
-                                           , _port     :: Int
-                                           , _user     :: String
-                                           , _password :: String
-                                           }
+type Host = Text
+
+type Port = Int
+
+type Secret = Text
+
+type Bucket = Text
+
+data S3Config
+   = S3Config { _host     :: Host
+              , _port     :: Port
+              , _bucket   :: Bucket
+              , _s3key    :: Secret
+              , _s3secret :: Secret
+              }
   deriving (Show, Read, Eq, Generic)
 
-makeLenses ''SchrodingerConfig
+makeLenses ''S3Config
 
-instance NFData SchrodingerConfig
+instance NFData S3Config
 
-instance ToJSON SchrodingerConfig where
+instance ToJSON S3Config where
   toJSON = genericToJSON $ aesonDrop 1 snakeCase
-instance FromJSON SchrodingerConfig where
+instance FromJSON S3Config where
   parseJSON = genericParseJSON $ aesonDrop 1 snakeCase
 
-instance FromJsonConfig SchrodingerConfig where
+instance FromJsonConfig S3Config where
   fromJsonConfig = do
       config <- getConfigText
-      pure $ config |-- ["deploy", "schrodinger"]
+      pure $ config |-- ["deploy", "s3"]
 
-instance FromDotenv SchrodingerConfig where
+instance FromDotenv S3Config where
   fromDotenv = do
       void loadDotenv
-      _host     <- getEnv "SCHRODINGER_HOST"
-      _port     <- getEnv "SCHRODINGER_PORT"
-      _user     <- getEnv "SCHRODINGER_USER"
-      _password <- getEnv "SCHRODINGER_PASSWORD"
-      pure SchrodingerConfig{..}
+      _host   <- getEnv "S3_HOST"
+      _port   <- getEnv "S3_PORT"
+      _bucket <- getEnv "S3_BUCKET"
+      _s3key    <- getEnv "S3_KEY"
+      _s3secret <- getEnv "S3_SECRET"
+      pure S3Config{..}
