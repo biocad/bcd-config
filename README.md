@@ -7,4 +7,7 @@ Tiny library with configs for:
 * Neo4j;
 * Postgres;
 * Redis;
+* S3;
 * Schrodinger.
+
+Read about formats [here](https://wiki.math.bio/x/JwAvAw).
