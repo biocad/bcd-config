@@ -67,7 +67,7 @@ class FromJsonConfig a where
 
 {-|
   The 'getConfig' function returns 'Text' in 'IO' monad with content of JSON file with config.
-  More information on JSON config file convention is available here: <https://wiki.math.bio/x/JwAvAw>.
+  More information on JSON config file convention is available here: <https://confluence.biocad.ru/x/viZbC>.
 
   This function will looks for config file with such params:
   @

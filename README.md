@@ -10,4 +10,4 @@ Tiny library with configs for:
 * S3;
 * Schrodinger.
 
-Read about formats [here](https://wiki.math.bio/x/JwAvAw).
+Read about formats [here](https://confluence.biocad.ru/x/viZbC).
