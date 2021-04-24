@@ -1,4 +1,6 @@
 {-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE ScopedTypeVariables  #-}
+{-# LANGUAGE TypeApplications     #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
 module System.BCD.Config
@@ -18,8 +20,11 @@ import           Data.List              (find, isPrefixOf)
 import           Data.Maybe             (fromJust)
 import           Data.Text              as T (Text, pack)
 import           Data.Text.IO           (readFile)
+import           GHC.Stack              (HasCallStack)
 import           Prelude                hiding (readFile)
 import           System.Environment     (getArgs, lookupEnv)
+import           Text.Read              (readMaybe)
+import           Type.Reflection        (Typeable, typeRep)
 --
 -------------------------------------------------------------------------------
 -- dotenv
@@ -28,33 +33,40 @@ import           System.Environment     (getArgs, lookupEnv)
 -- | Describes possibility to read something from dotenv configuration.
 --
 class FromDotenv a where
-  fromDotenv :: MonadIO m => m a
+  fromDotenv :: (HasCallStack, MonadIO m) => m a
 
 loadDotenv :: MonadIO m => m ()
 loadDotenv = liftIO $ void $ loadFile defaultConfig
 
-class GetEnv a where
-  getEnv :: MonadIO m => String -> m a
+class Typeable a => GetEnv a where
+  getEnv :: (HasCallStack, MonadIO m) => String -> m a
   getEnv key = do
       valueM <- liftIO $ lookupEnv key
-      maybe (error $ "bcd-config: could not find environment <" <> key <> ">") (pure . convert) valueM
+      case valueM of
+        Nothing -> error $ "bcd-config: could not find environment <" <> key <> ">"
+        Just val -> case convertSafe val of
+          Nothing -> error $ "bcd-config: could not parse environment <" <> key <> "> = <" <> val <> ">" <> " as type " <> show (typeRep @a)
+          Just a -> return a
 
-  convert :: String -> a
+  convert :: HasCallStack => String -> a
+  convert = fromJust . convertSafe
+
+  convertSafe :: HasCallStack => String -> Maybe a
 
 instance GetEnv String where
-  convert = id
+  convertSafe = Just
 
 instance GetEnv Text where
-  convert = T.pack
+  convertSafe = Just . T.pack
 
 instance GetEnv Int where
-  convert = read
+  convertSafe = readMaybe
 
 instance GetEnv Float where
-  convert = read
+  convertSafe = readMaybe
 
 instance GetEnv Bool where
-  convert = read
+  convertSafe = readMaybe
 
 -------------------------------------------------------------------------------
 -- config.json
@@ -63,7 +75,7 @@ instance GetEnv Bool where
 -- | class 'FromJsonConfig' describes possibility to read something from configutaion.
 --
 class FromJsonConfig a where
-  fromJsonConfig :: MonadIO m => m a
+  fromJsonConfig :: (HasCallStack, MonadIO m) => m a
 
 {-|
   The 'getConfig' function returns 'Text' in 'IO' monad with content of JSON file with config.
@@ -76,7 +88,7 @@ class FromJsonConfig a where
   @
   By default it is looking for @config.json@ in current directory.
 -}
-getConfigText :: MonadIO m => m Text
+getConfigText :: (HasCallStack, MonadIO m) => m Text
 getConfigText = do
     args <- liftIO getArgs
     let path = fromJust $ findLong args <|> findShort args <|> Just "config.json"
