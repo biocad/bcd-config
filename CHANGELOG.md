@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.1.0] - 2021-04-24
+### Changed
+- Added `HasCallStack` to unsafe functions;
+- Report actual value and expected type on parse errors.
+
 ## [0.2.0.1] - 2020-03-31
 ### Fixed
 - Compilation with `--pedantic`.
