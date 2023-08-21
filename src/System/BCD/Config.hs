@@ -41,12 +41,19 @@ loadDotenv = liftIO $ void $ loadFile defaultConfig
 class Typeable a => GetEnv a where
   getEnv :: (HasCallStack, MonadIO m) => String -> m a
   getEnv key = do
-      valueM <- liftIO $ lookupEnv key
+      valueM <- getEnvMaybe key
       case valueM of
         Nothing -> error $ "bcd-config: could not find environment <" <> key <> ">"
+        Just val -> return val
+
+  getEnvMaybe :: (HasCallStack, MonadIO m) => String -> m (Maybe a)
+  getEnvMaybe key = do
+      valueM <- liftIO $ lookupEnv key
+      case valueM of
+        Nothing -> return Nothing
         Just val -> case convertSafe val of
           Nothing -> error $ "bcd-config: could not parse environment <" <> key <> "> = <" <> val <> ">" <> " as type " <> show (typeRep @a)
-          Just a -> return a
+          Just a -> return $ Just a
 
   convert :: HasCallStack => String -> a
   convert = fromJust . convertSafe

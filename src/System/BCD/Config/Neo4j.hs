@@ -12,6 +12,7 @@ module System.BCD.Config.Neo4j
   , timeout
   , rps
   , descr
+  , version
   ) where
 
 import           Control.DeepSeq   (NFData)
@@ -33,6 +34,7 @@ data Neo4jConfig = Neo4jConfig { _host     :: String
                                , _timeout  :: Int
                                , _rps      :: Int
                                , _descr    :: String
+                               , _version  :: Maybe Int
                                }
   deriving (Show, Read, Eq, Generic)
 
@@ -61,4 +63,5 @@ instance FromDotenv Neo4jConfig where
       _timeout  <- getEnv "NEO4J_TIMEOUT"
       _rps      <- getEnv "NEO4J_RPS"
       _descr    <- getEnv "NEO4J_DESCR"
+      _version  <- getEnvMaybe "NEO4J_BOLT_VERSION"
       pure Neo4jConfig{..}
