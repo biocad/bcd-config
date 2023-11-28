@@ -1,5 +1,5 @@
 name:           bcd-config
-version:        0.2.1.0
+version:        0.2.1.1
 synopsis:       Library to get config.
 description:    Library to get config to different systems
 homepage:       https://github.com/biocad/bcd-config#readme

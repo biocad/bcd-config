@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.1.1] - 2023-08-21
+### Added
+- `NEO4J_BOLT_VERSION` configuration.
+
 ## [0.2.1.0] - 2021-04-24
 ### Changed
 - Added `HasCallStack` to unsafe functions;
